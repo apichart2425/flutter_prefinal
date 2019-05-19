@@ -7,6 +7,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterScreen extends State<RegisterPage> {
+  final color = const Color(0xffb71c1c);
+
   final _formkey = GlobalKey<FormState>();
 
   UserProvider user = UserProvider();
@@ -42,6 +44,7 @@ class RegisterScreen extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register"),
+        backgroundColor: color,
       ),
       body: Form(
         key: _formkey,
