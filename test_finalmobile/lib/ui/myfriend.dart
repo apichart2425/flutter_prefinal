@@ -17,7 +17,7 @@ class MyfriendPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("My-Friend"),
-        backgroundColor: color,
+        // backgroundColor: color,
       ),
       body: Container(
         child: ListView(
@@ -38,9 +38,25 @@ class MyfriendPage extends StatelessWidget {
             ),
             RaisedButton(
               child: Text("POST"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // builder: (context) => TodoPage(id: this.id),
+                  ),
+                );
+              },
             ),
             RaisedButton(
               child: Text("ALBUMS"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // builder: (context) => TodoPage(id: this.id),
+                  ),
+                );
+              },
             ),
             RaisedButton(
               child: Text("BACK"),

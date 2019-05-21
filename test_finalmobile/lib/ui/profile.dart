@@ -44,8 +44,8 @@ class ProfileScreen extends State<ProfilePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Profile Setup"),
-          automaticallyImplyLeading: false,
-          backgroundColor: color,
+          // automaticallyImplyLeading: false,
+          // backgroundColor: color,
         ),
         body: Form(
           key: _formkey,
@@ -142,6 +142,7 @@ class ProfileScreen extends State<ProfilePage> {
                       userData.age = age.text;
                       userData.password = password.text;
                       userData.quote = quote.text;
+                      
                       //function to check if user in
                       Future isUserTaken(User user) async {
                         var userList = await allUser;

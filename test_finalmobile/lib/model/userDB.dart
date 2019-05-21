@@ -21,9 +21,9 @@ class User {
   User.formMap(Map<String, dynamic> map) {
     this.id = map[idColumn];
     this.userid = map[useridColumn];
+    this.password = map[passwordColumn];
     this.name = map[nameColumn];
     this.age = map[ageColumn];
-    this.password = map[passwordColumn];
     this.quote = map[quoteColumn];
   }
 

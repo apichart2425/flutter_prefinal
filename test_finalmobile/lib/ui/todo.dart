@@ -45,7 +45,7 @@ class Todo {
 }
 
 class TodoPage extends StatelessWidget {
-    final color = const Color(0xffb71c1c);
+  final color = const Color(0xffb71c1c);
 
   // Declare a field that holds the Todo
   final int id;
@@ -58,7 +58,8 @@ class TodoPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Todos"),
-        backgroundColor: color,
+        automaticallyImplyLeading: false,
+        // backgroundColor: color,
       ),
       body: Container(
         child: Column(

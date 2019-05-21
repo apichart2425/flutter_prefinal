@@ -59,7 +59,7 @@ class FriendPageState extends State<FriendPage> {
       appBar: AppBar(
         title: Text("MY Friend"),
         automaticallyImplyLeading: false,
-        backgroundColor: color,
+        // backgroundColor: color,
       ),
       body: Container(
         child: Column(

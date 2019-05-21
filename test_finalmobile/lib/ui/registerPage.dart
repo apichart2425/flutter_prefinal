@@ -20,7 +20,7 @@ class RegisterScreen extends State<RegisterPage> {
   final repassword = TextEditingController();
   final quote = TextEditingController();
 
-  bool isUserIn = false;
+  bool isUserInData = false;
 
   bool isNumeric(String s) {
     if(s == null) {
@@ -44,7 +44,7 @@ class RegisterScreen extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register"),
-        backgroundColor: color,
+        // backgroundColor: color,
       ),
       body: Form(
         key: _formkey,
@@ -66,7 +66,7 @@ class RegisterScreen extends State<RegisterPage> {
                 else if (value.length < 6 || value.length > 12){
                   return "Please fill UserId Correctly";
                 }
-                else if (this.isUserIn){
+                else if (this.isUserInData){
                   return "This Username is taken";
                 }
               }
@@ -151,7 +151,7 @@ class RegisterScreen extends State<RegisterPage> {
                   var userList = await allUser;
                   for(var i=0; i < userList.length;i++){
                     if (user.userid == userList[i].userid){
-                      this.isUserIn = true;
+                      this.isUserInData = true;
                       break;
                     }
                   }
@@ -159,12 +159,12 @@ class RegisterScreen extends State<RegisterPage> {
 
                 //call function
                 await isNewUserIn(userData);
-                print(this.isUserIn);
+                print(this.isUserInData);
 
                 //validate form
                 if (_formkey.currentState.validate()){
                                   //if user not exist
-                  if(await !this.isUserIn) {
+                  if(await !this.isUserInData) {
                     userid.text = "";
                     name.text = "";
                     age.text = "";
@@ -176,7 +176,7 @@ class RegisterScreen extends State<RegisterPage> {
                   }
                 }
 
-                this.isUserIn = false;
+                this.isUserInData = false;
 
                 Future showAllUser() async {
                   var userList = await allUser;

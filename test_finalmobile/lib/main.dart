@@ -6,6 +6,7 @@ import './ui/profile.dart';
 import './ui/friend.dart';
 
 void main() => runApp(MyApp());
+const PrimaryColor = const Color(0xffb71c1c);
 
 class MyApp extends StatelessWidget {
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Prepared',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: PrimaryColor,
       ),
       initialRoute: "/",
       routes: {

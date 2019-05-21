@@ -95,25 +95,26 @@ class LoginScreen extends State<LoginPage> {
                       Toast.show("Please fill out this form", context,
                           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
                       this.formState = 0;
-                      print(111);
-                    } else {
-                      print(222);
+                      print("Pls check userid or pass");
+                    }
+                    else {
+                      print("Else formstate = 2");
                       this.formState = 0;
                       print("${user_check.text}, ${password_check.text}");
                       await isUserValid(user_check.text, password_check.text);
                       if (!this.isValid) {
-                        print(333);
+                        print("ข้อมูลผิดนะ");
                         Toast.show("Invalid user or password", context,
                             duration: Toast.LENGTH_SHORT,
                             gravity: Toast.BOTTOM);
                       } else {
-                        print(444);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomePage()));
                         user_check.text = "";
                         password_check.text = "";
+                        print("PASS !!!");
                       }
                     }
                   },

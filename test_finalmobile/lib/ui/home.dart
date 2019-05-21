@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/state.dart';
+import './profile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("HOME"),
         automaticallyImplyLeading: false,
-        backgroundColor: color,
+        // backgroundColor: color,
       ),
       body: Container(
         child: ListView(
@@ -30,7 +31,11 @@ class HomePageState extends State<HomePage> {
             RaisedButton(
               child: Text("PROFILE SETUP"),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/profile');
+                 Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfilePage()));
+                // Navigator.pushReplacementNamed(context, '/profile');
               },
             ),
             RaisedButton(
