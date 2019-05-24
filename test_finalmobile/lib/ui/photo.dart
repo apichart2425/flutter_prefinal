@@ -33,15 +33,15 @@ class Photos {
   final int id;
   final String title;
   final String url;
-  final String thumnailurl;
-  Photos({this.album_id, this.id, this.url, this.thumnailurl, this.title});
+  final String thumbnailUrl;
+  Photos({this.album_id, this.id, this.url, this.thumbnailUrl, this.title});
 
   factory Photos.fromJson(Map<String, dynamic> json) {
     return Photos(
         album_id: json['albumId'],
         id: json['id'],
         url: json['url'],
-        thumnailurl: json['thumnailurl'],
+        thumbnailUrl: json['thumbnailUrl'],
         title: json['title']);
   }
 }
@@ -123,7 +123,7 @@ class PhotosFriend extends StatelessWidget {
                     ),
                     Container(
                         child: Image.network(
-                          '${values[index].url}',
+                          '${values[index].thumbnailUrl}',
                         ))
                   ],
                 ),
