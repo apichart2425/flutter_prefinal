@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import '../model/userDB.dart';
 
-class RegisterPage extends StatefulWidget {
+
+class RegisterPage extends StatefulWidget{
   @override
-  RegisterScreen createState() => RegisterScreen();
+  State<StatefulWidget> createState() {
+    return RegisterPageState();
+  }
+
 }
 
-class RegisterScreen extends State<RegisterPage> {
-  final color = const Color(0xffb71c1c);
-
-  final _formkey = GlobalKey<FormState>();
+class RegisterPageState extends State<RegisterPage>{
+  final _formKey = GlobalKey<FormState>();
 
   UserProvider user = UserProvider();
-
   final userid = TextEditingController();
   final name = TextEditingController();
   final age = TextEditingController();
@@ -20,7 +21,7 @@ class RegisterScreen extends State<RegisterPage> {
   final repassword = TextEditingController();
   final quote = TextEditingController();
 
-  bool isUserInData = false;
+  bool user_state = false;
 
   bool isNumeric(String s) {
     if(s == null) {
@@ -44,10 +45,9 @@ class RegisterScreen extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register"),
-        // backgroundColor: color,
       ),
       body: Form(
-        key: _formkey,
+        key: _formKey,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 15, 30, 0),
           children: <Widget>[
@@ -66,7 +66,7 @@ class RegisterScreen extends State<RegisterPage> {
                 else if (value.length < 6 || value.length > 12){
                   return "Please fill UserId Correctly";
                 }
-                else if (this.isUserInData){
+                else if (this.user_state){
                   return "This Username is taken";
                 }
               }
@@ -138,45 +138,45 @@ class RegisterScreen extends State<RegisterPage> {
             RaisedButton(
               child: Text("REGISTER NEW ACCOUNT"),
               onPressed: () async {
-                await user.open;
+                await user.open("user.db");
                 Future<List<User>> allUser = user.getAllUser();
-                User userData = User();
-                userData.userid = userid.text;
-                userData.name = name.text;
-                userData.age = age.text;
-                userData.password = password.text;
+                User user_Data = User();
+                user_Data.userid = userid.text;
+                user_Data.name = name.text;
+                user_Data.age = age.text;
+                user_Data.password = password.text;
 
                 //function to check if user in
                 Future isNewUserIn(User user) async {
                   var userList = await allUser;
                   for(var i=0; i < userList.length;i++){
                     if (user.userid == userList[i].userid){
-                      this.isUserInData = true;
+                      this.user_state = true;
                       break;
                     }
                   }
                 }
 
                 //call function
-                await isNewUserIn(userData);
-                print(this.isUserInData);
+                await isNewUserIn(user_Data);
+                print(this.user_state);
 
                 //validate form
-                if (_formkey.currentState.validate()){
+                if (_formKey.currentState.validate()){
                                   //if user not exist
-                  if(await !this.isUserInData) {
+                  if(await !this.user_state) {
                     userid.text = "";
                     name.text = "";
                     age.text = "";
                     password.text = "";
                     repassword.text = "";
-                    await user.insertUser(userData);
+                    await user.insertUser(user_Data);
                     Navigator.pop(context);
                     print('insert complete');
                   }
                 }
 
-                this.isUserInData = false;
+                this.user_state = false;
 
                 Future showAllUser() async {
                   var userList = await allUser;

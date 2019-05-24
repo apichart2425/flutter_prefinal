@@ -1,66 +1,58 @@
 import 'package:flutter/material.dart';
+import './album.dart';
+import './post.dart';
 import './todo.dart';
 
 class MyfriendPage extends StatelessWidget {
-  final color = const Color(0xffb71c1c);
-
   // Declare a field that holds the Todo
   final int id;
   final String name;
   // In the constructor, require a Todo
-  MyfriendPage({Key key, @required this.id, @required this.name})
-      : super(key: key);
+  MyfriendPage({Key key, @required this.id, @required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("My-Friend"),
-        // backgroundColor: color,
+        title: Text("My Friend"),
       ),
       body: Container(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 15, 30, 0),
           children: <Widget>[
-            Text("${id.toString()} : ${name}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+            Text(
+              "${id.toString()} : ${name}",
+              style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24)
+            ),
             RaisedButton(
               child: Text("TODOS"),
-              onPressed: () {
+              onPressed: (){
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TodoPage(id: this.id),
-                  ),
-                );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TodoPage(id: this.id),
+                ),
+              );
               },
             ),
             RaisedButton(
               child: Text("POST"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    // builder: (context) => TodoPage(id: this.id),
-                  ),
-                );
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PostFriend(id: this.id,)));
               },
             ),
             RaisedButton(
               child: Text("ALBUMS"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    // builder: (context) => TodoPage(id: this.id),
-                  ),
-                );
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumsFriend(id: this.id)));
               },
             ),
             RaisedButton(
               child: Text("BACK"),
-              onPressed: () {
+              onPressed: (){
                 Navigator.pop(context);
               },
             )

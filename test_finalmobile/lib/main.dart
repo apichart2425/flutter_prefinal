@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './ui/registerPage.dart';
-import './ui/loginPage.dart';
+import './ui/login.dart';
 import './ui/home.dart';
 import './ui/profile.dart';
 import './ui/friend.dart';

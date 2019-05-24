@@ -3,16 +3,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-Future<List<Todo>> fetchTodos(int userid) async {
-  final response = await http.get('https://jsonplaceholder.typicode.com/users/${userid}/todos');
+Future<List<Post>> fetchTodos(int userid) async {
+  final response = await http.get('https://jsonplaceholder.typicode.com/users/${userid}/posts');
 
-  List<Todo> todoApi = [];
+  List<Post> todoApi = [];
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     var body = json.decode(response.body);
     for(int i = 0; i< body.length;i++){
-      var todo = Todo.fromJson(body[i]);
+      var todo = Post.fromJson(body[i]);
       print(todo);
       if(todo.userid == userid){
         todoApi.add(todo);
@@ -26,36 +26,36 @@ Future<List<Todo>> fetchTodos(int userid) async {
 }
 
 
-class Todo {
+class Post {
   final int userid;
   final int id;
   final String title;
-  final String completed;
+  final String body;
 
-  Todo({this.userid, this.id, this.title, this.completed});
+  Post({this.userid, this.id, this.title, this.body});
 
-  factory Todo.fromJson(Map<String, dynamic> json) {
-      return Todo(
+  factory Post.fromJson(Map<String, dynamic> json) {
+      return Post(
       userid: json['userId'],
       id: json['id'],
       title: json['title'],
-      completed: (json['completed'] ? "complete" : ""),
+      body: json['body'],
     );
   }
 }
 
-class TodoPage extends StatelessWidget {
+class PostFriend extends StatelessWidget {
   // Declare a field that holds the Todo
   final int id;
   // In the constructor, require a Todo
-  TodoPage({Key key, @required this.id}) : super(key: key);
+  PostFriend({Key key, @required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todos"),
+        title: Text("Post"),centerTitle: true,
       ),
       body: Container(
         child: Column(
@@ -90,35 +90,33 @@ class TodoPage extends StatelessWidget {
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<Todo> values = snapshot.data;
+    List<Post> values = snapshot.data;
     return new Expanded(
       child: new ListView.builder(
         itemCount: values.length,
         itemBuilder: (BuildContext context, int index) {
-          return new Card(
-            child: InkWell(
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  (values[index].id).toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
+          return Container(
+            margin: EdgeInsets.all(5),
+            child: new Card(
+              child: InkWell(
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${(values[index].id).toString()} : ${values[index].title}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    ),
                   ),
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10)),
-                Text(
-                  values[index].title,
-                  style: TextStyle(fontSize: 16),
-                ),
-                Padding(padding: EdgeInsets.all(10),),
-                Text(
-                  values[index].completed,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),
-                ),
-              ],
-            ),
+                  Padding(padding: EdgeInsets.all(5),),
+                  Text(
+                    values[index].body,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,),
+                  ),
+                ],
+              ),
+              ),
             ),
           );
         },

@@ -1,26 +1,43 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import '../model/state.dart';
 import '../model/userDB.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return ProfileScreen();
+    return ProfilePageState();
   }
 }
 
-class ProfileScreen extends State<ProfilePage> {
-  final _formkey = GlobalKey<FormState>();
-  final color = const Color(0xffb71c1c);
+class ProfilePageState extends State<ProfilePage> {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localPathFile async {
+    final path = await _localPath;
+    return File('$path/data.txt');
+  }
+
+  Future<File> writeContent(String data) async {
+    final file = await _localPathFile;
+    file.writeAsString('${data}');
+  }
+
+  final _formKey = GlobalKey<FormState>();
 
   UserProvider user = UserProvider();
-  final userid = TextEditingController(text: CurrentUser.USERID);
-  final name = TextEditingController(text: CurrentUser.NAME);
-  final age = TextEditingController(text: CurrentUser.AGE);
+  final userid = TextEditingController(text: StateUserLogin.userid);
+  final name = TextEditingController(text: StateUserLogin.name);
+  final age = TextEditingController(text: StateUserLogin.age);
   final password = TextEditingController();
-  final quote = TextEditingController(text: CurrentUser.QUOTE);
+  final quote = TextEditingController(text: StateUserLogin.quote);
 
-  bool isUserIn = false;
+  bool user_state = false;
 
   bool isNumeric(String s) {
     if (s == null) {
@@ -43,12 +60,10 @@ class ProfileScreen extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile Setup"),
-          // automaticallyImplyLeading: false,
-          // backgroundColor: color,
+          title: Text("Profile"),
         ),
         body: Form(
-          key: _formkey,
+          key: _formKey,
           child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 15, 30, 0),
               children: <Widget>[
@@ -64,7 +79,7 @@ class ProfileScreen extends State<ProfilePage> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return "Please fill out this form";
-                      } else if (isUserIn) {
+                      } else if (user_state) {
                         print("hey");
                         return "This Username is taken";
                       } else if (value.length < 6 || value.length > 12) {
@@ -135,56 +150,55 @@ class ProfileScreen extends State<ProfilePage> {
                     onPressed: () async {
                       await user.open("user.db");
                       Future<List<User>> allUser = user.getAllUser();
-                      User userData = User();
-                      userData.id = CurrentUser.ID;
-                      userData.userid = userid.text;
-                      userData.name = name.text;
-                      userData.age = age.text;
-                      userData.password = password.text;
-                      userData.quote = quote.text;
-                      
+                      User user_Data = User();
+                      user_Data.id = StateUserLogin.id;
+                      user_Data.userid = userid.text;
+                      user_Data.name = name.text;
+                      user_Data.age = age.text;
+                      user_Data.password = password.text;
+                      user_Data.quote = quote.text;
+                      writeContent(quote.text);
+                      print('00000000');
                       //function to check if user in
                       Future isUserTaken(User user) async {
-                        var userList = await allUser;
-                        for (var i = 0; i < userList.length; i++) {
-                          if (user.userid == userList[i].userid &&
-                              CurrentUser.ID != userList[i].id) {
+                        var alluser = await allUser;
+                        for (var i = 0; i < alluser.length; i++) {
+                          if (user.userid == alluser[i].userid &&
+                              StateUserLogin.id != alluser[i].id) {
                             print('Taken');
-                            this.isUserIn = true;
+                            this.user_state = true;
                             break;
                           }
                         }
                       }
 
                       //validate form
-                      if (_formkey.currentState.validate()) {
-                        await isUserTaken(userData);
-                        print(this.isUserIn);
+                      if (_formKey.currentState.validate()) {
+                        await isUserTaken(user_Data);
+                        print(this.user_state);
                         //if user not exist
-                        if (!this.isUserIn) {
-                          await user.updateUser(userData);
-                          CurrentUser.USERID = userData.userid;
-                          CurrentUser.NAME = userData.name;
-                          CurrentUser.AGE = userData.age;
-                          CurrentUser.PASSWORD = userData.password;
-                          CurrentUser.QUOTE = userData.quote;
-                          // Navigator.pop(context);
-                          Navigator.pushReplacementNamed(context, '/home');
-
+                        if (!this.user_state) {
+                          await user.updateUser(user_Data);
+                          StateUserLogin.userid = user_Data.userid;
+                          StateUserLogin.name = user_Data.name;
+                          StateUserLogin.age = user_Data.age;
+                          StateUserLogin.password = user_Data.password;
+                          StateUserLogin.quote = user_Data.quote;
+                          Navigator.pop(context);
                           print('insert complete');
                         }
                       }
 
-                      this.isUserIn = false;
+                      this.user_state = false;
                       Future showAllUser() async {
-                        var userList = await allUser;
-                        for (var i = 0; i < userList.length; i++) {
-                          print(userList[i]);
+                        var alluser = await allUser;
+                        for (var i = 0; i < alluser.length; i++) {
+                          print(alluser[i]);
                         }
                       }
 
                       showAllUser();
-                      print(CurrentUser.whoCurrent());
+                      print(StateUserLogin.whoCurrent());
                     }),
               ]),
         ));

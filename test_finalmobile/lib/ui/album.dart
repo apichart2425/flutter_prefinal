@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import './photo.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-Future<List<Todo>> fetchTodos(int userid) async {
-  final response = await http.get('https://jsonplaceholder.typicode.com/users/${userid}/todos');
+Future<List<Albums>> fetchTodos(int userid) async {
+  final response = await http.get('https://jsonplaceholder.typicode.com/users/${userid}/albums');
 
-  List<Todo> todoApi = [];
+  List<Albums> todoApi = [];
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     var body = json.decode(response.body);
     for(int i = 0; i< body.length;i++){
-      var todo = Todo.fromJson(body[i]);
+      var todo = Albums.fromJson(body[i]);
       print(todo);
       if(todo.userid == userid){
         todoApi.add(todo);
@@ -26,36 +27,34 @@ Future<List<Todo>> fetchTodos(int userid) async {
 }
 
 
-class Todo {
+class Albums {
   final int userid;
   final int id;
   final String title;
-  final String completed;
 
-  Todo({this.userid, this.id, this.title, this.completed});
+  Albums({this.userid, this.id, this.title});
 
-  factory Todo.fromJson(Map<String, dynamic> json) {
-      return Todo(
+  factory Albums.fromJson(Map<String, dynamic> json) {
+      return Albums(
       userid: json['userId'],
       id: json['id'],
       title: json['title'],
-      completed: (json['completed'] ? "complete" : ""),
     );
   }
 }
 
-class TodoPage extends StatelessWidget {
+class AlbumsFriend extends StatelessWidget {
   // Declare a field that holds the Todo
   final int id;
   // In the constructor, require a Todo
-  TodoPage({Key key, @required this.id}) : super(key: key);
+  AlbumsFriend({Key key, @required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todos"),
+        title: Text("Albums"),centerTitle: true,
       ),
       body: Container(
         child: Column(
@@ -90,35 +89,37 @@ class TodoPage extends StatelessWidget {
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<Todo> values = snapshot.data;
+    List<Albums> values = snapshot.data;
     return new Expanded(
       child: new ListView.builder(
         itemCount: values.length,
         itemBuilder: (BuildContext context, int index) {
-          return new Card(
-            child: InkWell(
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  (values[index].id).toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
+          return Container(
+            height:100,
+            margin: EdgeInsets.all(5),
+            child: new Card(
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PhotosFriend(id: this.id,album_id: values.elementAt(index).id)));
+                },
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${(values[index].id).toString()}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    ),
                   ),
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10)),
-                Text(
-                  values[index].title,
-                  style: TextStyle(fontSize: 16),
-                ),
-                Padding(padding: EdgeInsets.all(10),),
-                Text(
-                  values[index].completed,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),
-                ),
-              ],
-            ),
+                  Padding(padding: EdgeInsets.all(5),),
+                  Text(
+                    values[index].title,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,),
+                  ),
+                ],
+              ),
+              ),
             ),
           );
         },
