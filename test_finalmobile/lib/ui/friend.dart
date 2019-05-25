@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import './myfriend.dart';
 
-
-class FriendPage extends StatefulWidget{
+class FriendPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return FriendPageState();
@@ -20,7 +19,7 @@ Future<List<User>> fetchUsers() async {
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     var body = json.decode(response.body);
-    for(int i = 0; i< body.length;i++){
+    for (int i = 0; i < body.length; i++) {
       var user = User.fromJson(body[i]);
       userApi.add(user);
     }
@@ -51,9 +50,7 @@ class User {
   }
 }
 
-
-class FriendPageState extends State<FriendPage>{
-
+class FriendPageState extends State<FriendPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,21 +60,25 @@ class FriendPageState extends State<FriendPage>{
       body: Container(
         child: Column(
           children: <Widget>[
-            // RaisedButton(
-            //   child: Text("BACK"),
-            //   onPressed: (){
-            //     Navigator.of(context).pushReplacementNamed('/home');
-            //   },
-            // ),
+            RaisedButton(
+              child: Text("BACK"),
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+            ),
             FutureBuilder(
               future: fetchUsers(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
-                    return new Text('loading...');
+                    return Column(
+                      children: <Widget>[
+                        Text('loading...'),
+                      ],
+                    );
                   default:
-                    if (snapshot.hasError){
+                    if (snapshot.hasError) {
                       return new Text('Error: ${snapshot.error}');
                     } else {
                       return createListView(context, snapshot);
@@ -100,44 +101,40 @@ class FriendPageState extends State<FriendPage>{
           return new Card(
             child: InkWell(
               child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "${(values[index].id).toString()} : ${values[index].name}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "${(values[index].id).toString()} : ${values[index].name}",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10)),
-                Text(
-                  values[index].email,
-                  style: TextStyle(fontSize: 16),
-                ),
-                Text(
-                  values[index].phone,
-                  style: TextStyle(fontSize: 16),
-                ),
-                Text(
-                  values[index].website,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyfriendPage(id: values[index].id, name: values[index].name),
-                ),
-              );
-            },
+                  Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10)),
+                  Text(
+                    values[index].email,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    values[index].phone,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    values[index].website,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyfriendPage(
+                        id: values[index].id, name: values[index].name),
+                  ),
+                );
+              },
             ),
           );
         },
       ),
     );
   }
-
-
 }

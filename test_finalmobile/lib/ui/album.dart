@@ -59,12 +59,12 @@ class AlbumsFriend extends StatelessWidget {
       body: Container(
         child: Column(
           children: <Widget>[
-            // RaisedButton(
-            //   child: Text("BACK"),
-            //   onPressed: (){
-            //     Navigator.pop(context);
-            //   },
-            // ),
+            RaisedButton(
+              child: Text("BACK"),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
             FutureBuilder(
               future: fetchTodos(this.id),
               builder: (BuildContext context, AsyncSnapshot snapshot) {

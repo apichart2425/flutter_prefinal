@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import './comment.dart';
 
 Future<List<Post>> fetchTodos(int userid) async {
-  final response = await http.get('https://jsonplaceholder.typicode.com/users/${userid}/posts');
+  final response = await http
+      .get('https://jsonplaceholder.typicode.com/users/${userid}/posts');
 
   List<Post> todoApi = [];
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     var body = json.decode(response.body);
-    for(int i = 0; i< body.length;i++){
+    for (int i = 0; i < body.length; i++) {
       var todo = Post.fromJson(body[i]);
       print(todo);
-      if(todo.userid == userid){
+      if (todo.userid == userid) {
         todoApi.add(todo);
       }
     }
@@ -25,7 +27,6 @@ Future<List<Post>> fetchTodos(int userid) async {
   }
 }
 
-
 class Post {
   final int userid;
   final int id;
@@ -35,7 +36,7 @@ class Post {
   Post({this.userid, this.id, this.title, this.body});
 
   factory Post.fromJson(Map<String, dynamic> json) {
-      return Post(
+    return Post(
       userid: json['userId'],
       id: json['id'],
       title: json['title'],
@@ -55,17 +56,19 @@ class PostFriend extends StatelessWidget {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("Post"),centerTitle: true,
+        title: Text("Post"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         child: Column(
           children: <Widget>[
-            // RaisedButton(
-            //   child: Text("BACK"),
-            //   onPressed: (){
-            //     Navigator.pop(context);
-            //   },
-            // ),
+            RaisedButton(
+              child: Text("BACK"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             FutureBuilder(
               future: fetchTodos(this.id),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -74,7 +77,7 @@ class PostFriend extends StatelessWidget {
                   case ConnectionState.waiting:
                     return new Text('loading...');
                   default:
-                    if (snapshot.hasError){
+                    if (snapshot.hasError) {
                       return new Text('Error: ${snapshot.error}');
                     } else {
                       return createListView(context, snapshot);
@@ -82,7 +85,6 @@ class PostFriend extends StatelessWidget {
                 }
               },
             ),
-            
           ],
         ),
       ),
@@ -99,23 +101,29 @@ class PostFriend extends StatelessWidget {
             margin: EdgeInsets.all(5),
             child: new Card(
               child: InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CommentPost(id: values[index].id,)));
+                },
                 child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${(values[index].id).toString()} : ${values[index].title}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${(values[index].id).toString()} : ${values[index].title}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.all(5),),
-                  Text(
-                    values[index].body,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,),
-                  ),
-                ],
-              ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                    ),
+                    Text(
+                      values[index].body,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -123,5 +131,4 @@ class PostFriend extends StatelessWidget {
       ),
     );
   }
-
 }

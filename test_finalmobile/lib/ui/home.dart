@@ -49,6 +49,9 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      readcontent();
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -74,8 +77,8 @@ class HomePageState extends State<HomePage> {
             RaisedButton(
               child: Text("MY FRIENDS"),
               onPressed: () {
-                // Navigator.of(context).pushReplacementNamed('/friend');
-                Navigator.of(context).pushNamed('/friend');
+                Navigator.of(context).pushReplacementNamed('/friend');
+                // Navigator.of(context).pushNamed('/friend');
               },
             ),
             RaisedButton(
@@ -83,8 +86,8 @@ class HomePageState extends State<HomePage> {
               onPressed: () {
                 test() async {
                   sharedPreferences = await SharedPreferences.getInstance();
-                  sharedPreferences.setString('username','');
-                  sharedPreferences.setString('password','');
+                  sharedPreferences.setString('username', '');
+                  sharedPreferences.setString('password', '');
                 }
 
                 test();

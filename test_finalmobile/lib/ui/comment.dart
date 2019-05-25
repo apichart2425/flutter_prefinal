@@ -5,18 +5,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-Future<List<Photos>> fetchTodos(int userid) async {
+Future<List<Comment>> fetchTodos(int postid) async {
   final response = await http
-      .get('https://jsonplaceholder.typicode.com/albums/${userid}/photos');
+      .get('https://jsonplaceholder.typicode.com/posts/${postid}/comments');
 
-  List<Photos> todoApi = [];
+  List<Comment> todoApi = [];
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON
     var body = json.decode(response.body);
     for (int i = 0; i < body.length; i++) {
-      var todo = Photos.fromJson(body[i]);
-      if (todo.album_id == userid) {
+      var todo = Comment.fromJson(body[i]);
+      if (todo.postId == postid) {
         todoApi.add(todo);
       }
     }
@@ -28,37 +28,37 @@ Future<List<Photos>> fetchTodos(int userid) async {
   }
 }
 
-class Photos {
-  final int album_id;
+class Comment {
+  final int postId;
   final int id;
-  final String title;
-  final String url;
-  final String thumbnailUrl;
-  Photos({this.album_id, this.id, this.url, this.thumbnailUrl, this.title});
+  final String name;
+  final String email;
+  final String body;
+  Comment({this.postId, this.id, this.name, this.email, this.body});
 
-  factory Photos.fromJson(Map<String, dynamic> json) {
-    return Photos(
-        album_id: json['albumId'],
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+        postId: json['postId'],
         id: json['id'],
-        url: json['url'],
-        thumbnailUrl: json['thumbnailUrl'],
-        title: json['title']);
+        name: json['name'],
+        email: json['email'],
+        body: json['body']);
   }
 }
 
-class PhotosFriend extends StatelessWidget {
+class CommentPost extends StatelessWidget {
   // Declare a field that holds the Todo
   final int id;
-  final int album_id;
+  // final int album_id;
   // In the constructor, require a Todo
-  PhotosFriend({Key key, @required this.id, this.album_id}) : super(key: key);
+  CommentPost({Key key, @required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Use the Todo to create our UI
     return Scaffold(
       appBar: AppBar(
-        title: Text("Photos"),
+        title: Text("Comments"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -72,7 +72,7 @@ class PhotosFriend extends StatelessWidget {
               },
             ),
             FutureBuilder(
-              future: fetchTodos(this.album_id),
+              future: fetchTodos(this.id),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -94,7 +94,7 @@ class PhotosFriend extends StatelessWidget {
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<Photos> values = snapshot.data;
+    List<Comment> values = snapshot.data;
     return new Expanded(
       child: new ListView.builder(
         itemCount: values.length,
@@ -107,8 +107,8 @@ class PhotosFriend extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      '${(values[index].id).toString()}',
+                   Text(
+                      '${(values[index].postId).toString()} : ${values[index].id}',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
@@ -116,18 +116,21 @@ class PhotosFriend extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                     ),
                     Text(
-                      '${(values[index].title).toString()}',
-                      style: TextStyle(fontSize: 14),
+                      '${(values[index].body).toString()}',
+                      style:
+                          TextStyle(fontSize: 18),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(5),
+                     Text(
+                      '${(values[index].name).toString()}',
+                      style:
+                          TextStyle(fontSize: 18),
                     ),
-                    Container(
-                        child: Center(
-                      child: Image.network(
-                        '${values[index].thumbnailUrl}',
-                      ),
-                    ))
+                    Text(
+                      '(${(values[index].email).toString()})',
+                      style:
+                          TextStyle(fontSize: 18),
+                    ),
+                    
                   ],
                 ),
               ),
